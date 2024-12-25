@@ -20,7 +20,7 @@ const enquiryRegister = async (req, res) => {
     const [result] = await db.query(
       `INSERT INTO enquiry 
         (name, email, phone, loan_type, description, postcode, agree,created_on) 
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?,?)`,
       [
         name,
         email,
