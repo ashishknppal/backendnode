@@ -37,7 +37,10 @@ const adminLogin = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.json({ message: 'Login successful', token });
+    res.json({ message: 'Login successful',response:{
+      token:token,
+      user:admin
+     } });
   } catch (error) {
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
