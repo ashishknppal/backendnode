@@ -25,6 +25,7 @@ router.get('/bod/:id', getBODById);
 router.put('/bod/:id',authenticateToken,validatebod,checkValidationbod, updateBOD);
 router.delete('/bod/:id',authenticateToken, deleteBOD);
 
+router.get('/getallcms/', getallcms);
 router.get('/getcms/', authenticateToken,getcms);
 router.post('/cms/add',authenticateToken,addcms);
 router.get('/cms/:id', getCMSById);
