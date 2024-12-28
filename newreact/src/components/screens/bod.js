@@ -12,37 +12,29 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 function Taxcode() {
   const [searchTerm, setSearchTerm] = useState("");
   const [getCmsContent, set_cmsContent] = useState([]);
-  const [title, cms_title] = useState("");
-  const [status, set_status] = useState("");
-  const [description, set_description] = useState("");
-  const [cms, set_cms] = useState("");
-  const [getCMS, setCMS] = useState([]);
+
+    const [name, setName] = useState("");
+    const [Image, setImage] = useState("");
+    const [status, set_status] = useState("");
+    const [Address, setAddress] = useState("");
+    const [Background, setBackground] = useState("");
+    const [designation, setdesignation] = useState("");
+    const [office_number, setoffice_number] = useState("");
+    const [Residence_Number, setResidence_Number] = useState("");
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedcontentid, setselectedcontentid] = useState(null);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   useEffect(() => {
-    get_cms_all();
+   
     get_cmsContent(currentPage, searchTerm);
   }, [currentPage, searchTerm]);
 
-  const get_cms_all = async () => {
-    try {
-      const res = await axios.get(`${endpoint.CMS_all}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setCMS(res.data);
-    } catch (error) {
-      console.error("Catch error:", error);
-    } finally {
-    }
-  };
   const get_cmsContent = async (page, search = "") => {
     try {
-      const res = await axios.get(`${endpoint.CMScONTENT}?page=${page}&search=${search}`);
+      const res = await axios.get(`${endpoint.BOD}?page=${page}&search=${search}`);
     
       setTotalItems(res.data.totalItems);
       set_cmsContent(res.data.data);
@@ -62,14 +54,17 @@ function Taxcode() {
   const add_cmsContent  = async () => {
     if (!validateInputs()) return;
     const payload = {
-      title: title,
+      name: name,
+      Image: Image,
       status: status,
-      description: description,
-      content_for: cms,
-      doc:""
+      Address: Address,
+      Background: Background,
+      designation: designation,
+      office_number: office_number,
+      Residence_Number: Residence_Number,
     };
     try {
-      const res = await axios.post(`${endpoint.ADD_CMScONTENT}`, payload, {
+      const res = await axios.post(`${endpoint.ADD_BOD}`, payload, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -84,7 +79,7 @@ function Taxcode() {
   };
   const validateInputs = () => {
     const exist_title = getCmsContent.find(
-      (item) => item.id != setselectedcontentid && item.title === title
+      (item) => item.id != setselectedcontentid && item.name === name
     );
     console.log("exist ::", exist_title);
 
@@ -95,14 +90,17 @@ function Taxcode() {
   const update_cmsContent = async () => {
     if (!validateInputs()) return;
     const payload = {
-      title: title,
+      name: name,
+      Image: Image,
       status: status,
-      description: description,
-      content_for: cms,
-      doc:""
+      Address: Address,
+      Background: Background,
+      designation: designation,
+      office_number: office_number,
+      Residence_Number: Residence_Number,
     };
     try {
-      const res = await axios.put(`${endpoint.UPDATE_CMScONTENT}/${selectedcontentid}`, payload, {
+      const res = await axios.put(`${endpoint.UPDATE_BOD}/${selectedcontentid}`, payload, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -121,7 +119,7 @@ function Taxcode() {
   // delete taxcode api
   const delete_taxcode = async (item) => {
     try {
-      const res = await axios.delete(`${endpoint.DELETE_CMScONTENT}/${item.id}`);
+      const res = await axios.delete(`${endpoint.DELETE_BOD}/${item.id}`);
       
       toast.success(res.data.message);
       get_cmsContent();
@@ -146,8 +144,13 @@ function Taxcode() {
   };
 
   const updatestate = () => {
-    cms_title("");
-    set_description("");
+    setName("");
+    setAddress("");
+    set_status("");
+    setBackground("");
+    setdesignation("");
+    setoffice_number("");
+    setResidence_Number("");
     get_cmsContent();
     closeModal();
   };
@@ -155,9 +158,13 @@ function Taxcode() {
   // add Category model open
   const openAddModal = () => {
     setIsEditMode(false);
-    cms_title("");
-    set_description("");
-    set_cms("");
+    setName("");
+    setAddress("");
+    set_status("");
+    setBackground("");
+    setdesignation("");
+    setoffice_number("");
+    setResidence_Number("");
     handleShowModal();
   };
 
@@ -165,10 +172,13 @@ function Taxcode() {
   const openUpdateModal = (content) => {
     setIsEditMode(true);
     setselectedcontentid(content.id);
+    setName(content.name);
+    setAddress(content.address);
     set_status(content.status);
-    cms_title(content.title);
-    set_cms(content.content_for);
-    set_description(content.description);
+    setBackground(content.background);
+    setdesignation(content.designation);
+    setoffice_number(content.office);
+    setResidence_Number(content.residence);
     handleShowModal();
   };
   const handleFileUpload = (e) => {
@@ -188,7 +198,7 @@ function Taxcode() {
   return (
     <div className="container-fluid product p-3 bg-white">
       <div className="card header">
-        <h4 className="mb-3 mb-md-0">CMS Content</h4>
+        <h4 className="mb-3 mb-md-0">Bank of Director's List</h4>
         <div className="cardmenu d-flex flex-column flex-md-row">
           <div className="icons d-flex mb-2 mb-md-0">
             <a href="#" className="icon" onClick={openAddModal}>
@@ -221,35 +231,83 @@ function Taxcode() {
           <div className="row">
             <div className="col-md-6">
               <div className="form-group">
-                <label htmlFor="title"> Title</label>
+                <label htmlFor="name"> Name</label>
                 <input
                   type="text"
-                  id="title"
-                  value={title}
-                  onChange={(e) => cms_title(e.target.value)}
-                  placeholder="Enter Title"
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter name"
                   required
                 />
               </div>
             </div>
             <div className="col-md-6">
               <div className="form-group">
-                <label htmlFor="invoice">Select CMS</label>
-                    
-                    <select
-                      style={{ width: "100%" }}
-                      value={cms ? cms : ''}
-                      onChange={(e) => {
-                        set_cms(e.target.value ? e.target.value : null); 
-                      }}
-                    >
-                      <option value="" disabled>Select CMS</option>
-                      {getCMS.map((cms) => (
-                        <option key={cms.id} value={cms.id}>
-                          {cms.title}
-                        </option>
-                      ))}
-                </select>
+              <label htmlFor="Image"> Image</label>
+                <input
+                  type="file"
+                  id="Image"
+                  value={Image}
+                  onChange={(e) => setImage(e.target.value)}
+                  placeholder="Choose Image"
+                  required
+                />
+              </div>
+            </div>
+             <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="Background"> Background</label>
+                <input
+                  type="text"
+                  id="Background"
+                  value={Background}
+                  onChange={(e) => setBackground(e.target.value)}
+                  placeholder="Enter Background"
+                  required
+                />
+              </div>
+            </div>  
+            
+            <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="designation"> Designation</label>
+                <input
+                  type="text"
+                  id="designation"
+                  value={designation}
+                  onChange={(e) => setdesignation(e.target.value)}
+                  placeholder="Enter Designation"
+                  required
+                />
+              </div>
+            </div>  
+            
+            <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="OfficeNumber"> Office Number</label>
+                <input
+                  type="text"
+                  id="OfficeNumber"
+                  value={office_number}
+                  onChange={(e) => setoffice_number(e.target.value)}
+                  placeholder="Enter Office Number"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="Residence_Number"> Residence Number</label>
+                <input
+                  type="text"
+                  id="Residence_Number"
+                  value={Residence_Number}
+                  onChange={(e) => setResidence_Number(e.target.value)}
+                  placeholder="Enter Residence Number"
+                  required
+                />
               </div>
             </div>
 
@@ -274,30 +332,20 @@ function Taxcode() {
                 />
               </div>
             </div>
-
-            <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="fileUpload">Upload File</label>
-                <input
-                  type="file"
-                  id="fileUpload"
-                  accept=".jpg, .jpeg, .png, .pdf, .xls, .xlsx"
-                  onChange={(e) => handleFileUpload(e)}
-                />
-              </div>
-            </div>
+{/* 
+         
 
           </div>
-          <div className="row">
-            <div className="col-md-12">
+          <div className="row"> */}
+            <div className="col-md-6">
               <div className="form-group">
-                <label htmlFor="description">Description</label>
+                <label htmlFor="setAddress">Address</label>
                 <CKEditor
                   editor={ClassicEditor}
-                  data={description}
+                  data={Address}
                   onChange={(event, editor) => {
                     const data = editor.getData();
-                    set_description(data);
+                    setAddress(data);
                   }}
                 />
               </div>
@@ -326,10 +374,14 @@ function Taxcode() {
         <table className="table table-boardered">
           <thead>
             <tr>
-              <th>S.No.</th>
-              <th> CMS</th>
-              <th> Title</th>
-              <th> Description</th>
+              <th> S.No.</th>
+              <th> Name</th>
+              <th> Image</th>
+              <th> Designation</th>
+              <th> Office</th>
+              <th> Residence</th>
+              <th> Background</th>
+              <th> Address</th>
               <th> Status</th>
               <th> Action</th>
             </tr>
@@ -339,10 +391,20 @@ function Taxcode() {
               return (
                 <tr key={o.id}>
                   <td>{i + 1}</td>
-                  <td>{o.cms_title}</td>
-                  <td style={{ maxWidth: '200px', overflow: 'auto', maxHeight: '10px' }}>{o.title}</td>
+                  <td>{o.name}</td>
+                  <td style={{ maxWidth: '200px', overflow: 'hidden' }}>
+                    <img 
+                        src={o.image} 
+                        alt="Image Preview" 
+                        style={{ maxWidth: '100%', maxHeight: '100px', objectFit: 'cover' }} 
+                    />
+                    </td>
+                  <td>{o.designation}</td>
+                  <td>{o.office}</td>
+                  <td>{o.residence}</td>
+                  <td>{o.background}</td>
                   <td
-                    dangerouslySetInnerHTML={{ __html: o.description }}
+                    dangerouslySetInnerHTML={{ __html: o.address }}
                     style={{
                       maxWidth: '300px',
                       maxHeight: '10px',
