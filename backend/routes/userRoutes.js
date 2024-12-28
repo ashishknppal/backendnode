@@ -4,7 +4,7 @@ const { adminLogin,logout ,getAdminDetails} = require('../controllers/adminContr
 const { validateUser, checkValidation } = require('../validators/userValidator');
 const { validatebod, checkValidationbod } = require('../validators/bodValidator');
 const { enquiryRegister ,feedbackRegister,getfeedback,getenquiry} = require('../controllers/enquiryController');
-const { getbod,getallbod, addBOD, getBODById, updateBOD, deleteBOD} = require('../controllers/bodController');
+const { getbod,getallbod, addBOD, getBODById, updateBOD, deleteBOD, getbankprocessor,getallbankprocessor, addbankprocessor, getbankprocessorById, updatebankprocessor, deletebankprocessor} = require('../controllers/bodController');
 const { getcms,getallcms,addcms,getCMSById,updateCMS,deleteCMS,getcmsContent,getAllcmsContent,getcmsContentById,addcmsContent,updatecmsContent,deletecmsContent } = require('../controllers/cmsController');
 const { getnews,getallnews,addnews,getnewsById,updatenews,deletenews ,getcareer,getAllcareer,getcareerById,addcareer,updatecareer,deletecareer ,getinterest,getAllinterest,getinterestById,addinterest,updateinterest,deleteinterest} = require('../controllers/careerNewsController');
 const authenticateToken = require('../middleware/auth');
@@ -26,6 +26,13 @@ router.post('/bod/add',authenticateToken,validatebod, checkValidationbod,addBOD)
 router.get('/bod/:id', getBODById);
 router.put('/bod/:id',authenticateToken,validatebod,checkValidationbod, updateBOD);
 router.delete('/bod/:id',authenticateToken, deleteBOD);
+
+router.get('/getbankprocessor/', authenticateToken,getbankprocessor);
+router.get('/getallbankprocessor/',getallbankprocessor);
+router.post('/bankproccess/add',authenticateToken,addbankprocessor);
+router.get('/bankproccess/:id', getbankprocessorById);
+router.put('/bankproccess/:id',authenticateToken,updatebankprocessor);
+router.delete('/bankproccess/:id',authenticateToken, deletebankprocessor);
 
 router.get('/getallnews/', getallnews);
 router.get('/getnews/', authenticateToken,getnews);
