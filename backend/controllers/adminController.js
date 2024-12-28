@@ -1,6 +1,9 @@
 const db = require('../db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
+const { upload } = require('./uploadConfig');
 
 const tokenBlacklist = new Set();
 // Admin login logic
@@ -52,7 +55,7 @@ const getAdminDetails = async (req, res) => {
     const token = authHeader && authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const { email } = decoded ; // Extract admin ID from the token
+    const { email } = decoded ; 
 
     // Fetch admin details from the database
     const [admins] = await db.query('SELECT admin_id,admin_username,email,admin_status FROM admin WHERE email = ?', [email]);
@@ -99,7 +102,50 @@ const logout = (req, res) => {
   }
 };
 
+const uploadFile = async (req, res) => {
+  try {
+    // Middleware to handle the file upload
+    const singleUpload = upload.single('file');
+    singleUpload(req, res, (err) => {
+      if (err) {
+        return res.status(400).send({ error: err.message });
+      }
 
+      if (!req.file) {
+        return res.status(400).send({ error: 'No file uploaded' });
+      }
 
+      // Define the target directory and file path
+      const targetDirectory = 'uploads/';
+      const targetPath = path.join(targetDirectory, req.file.filename);
 
-module.exports = { adminLogin ,logout,getAdminDetails};
+      // Ensure the target directory exists
+      if (!fs.existsSync(targetDirectory)) {
+        fs.mkdirSync(targetDirectory, { recursive: true });
+      }
+
+      // Move the file from the temp directory to the target directory
+      const tempPath = req.file.path;
+      fs.rename(tempPath, targetPath, (error) => {
+        if (error) {
+          return res.status(500).send({ error: 'Error moving file' });
+        }
+
+        // Respond with file details and its new path
+        res.status(200).send({
+          message: 'File uploaded and moved successfully',
+          fileDetails: {
+            originalName: req.file.originalname,
+            storageName: req.file.filename,
+            path: targetPath,
+            size: req.file.size,
+          },
+        });
+      });
+    });
+  } catch (error) {
+    res.status(500).send({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { adminLogin ,logout,getAdminDetails,uploadFile};

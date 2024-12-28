@@ -1,6 +1,6 @@
 const express = require('express');
 const { getUsers, addUser, getUserById, updateUser, deleteUser } = require('../controllers/userController');
-const { adminLogin,logout ,getAdminDetails} = require('../controllers/adminController');
+const { adminLogin,logout ,getAdminDetails ,uploadFile} = require('../controllers/adminController');
 const { validateUser, checkValidation } = require('../validators/userValidator');
 const { validatebod, checkValidationbod } = require('../validators/bodValidator');
 const { enquiryRegister ,feedbackRegister,getfeedback,getenquiry} = require('../controllers/enquiryController');
@@ -8,6 +8,7 @@ const { getbod,getallbod, addBOD, getBODById, updateBOD, deleteBOD, getbankproce
 const { getcms,getallcms,addcms,getCMSById,updateCMS,deleteCMS,getcmsContent,getAllcmsContent,getcmsContentById,addcmsContent,updatecmsContent,deletecmsContent } = require('../controllers/cmsController');
 const { getnews,getallnews,addnews,getnewsById,updatenews,deletenews ,getcareer,getAllcareer,getcareerById,addcareer,updatecareer,deletecareer ,getinterest,getAllinterest,getinterestById,addinterest,updateinterest,deleteinterest} = require('../controllers/careerNewsController');
 const authenticateToken = require('../middleware/auth');
+// const { upload } = require('./uploadConfig');
 
 const router = express.Router();
 router.post('/login', adminLogin);
@@ -74,5 +75,6 @@ router.post('/feedback',feedbackRegister);
 router.get('/getfeedback/', authenticateToken,getfeedback);
 router.get('/getenquiry/', authenticateToken,getenquiry);
 
+router.post('/uploadfile', uploadFile);
 
 module.exports = router;
