@@ -56,6 +56,7 @@ const getallcms = async (req, res) => {
 const addcms = async (req, res) => {
     const {
       title,
+      service,
       status
     } = req.body;
   
@@ -64,16 +65,17 @@ const addcms = async (req, res) => {
   
       const [result] = await db.query(
         `INSERT INTO cms 
-          (title, status, created_on) 
+          (title, service, status, created_on) 
          VALUES (?, ?, ?)`,
         [
           title,
+          service,
           status,
           created_on
         ]
       );
   
-      res.status(201).json({ id: result.insertId, message: 'CMS member added successfully.' });
+      res.status(201).json({ id: result.insertId, message: 'CMS added successfully.' });
     } catch (error) {
       console.error('Error inserting CMS member:', error.message);
       res.status(500).json({ error: error.message });
@@ -165,8 +167,7 @@ const getcmsContent = async (req, res) => {
       const offset = (page - 1) * limit;
   
       const [users] = await db.query(
-        'SELECT * FROM content ORDER BY created_on DESC LIMIT ? OFFSET ?',
-        [limit, offset]
+        'SELECT a.*, b.title AS cms_title FROM content AS a LEFT JOIN cms AS b ON a.content_for = b.id ORDER BY a.created_on DESC LIMIT ? OFFSET ?',[limit, offset]
       );
   
       const [[{ total }]] = await db.query(
@@ -246,11 +247,11 @@ const getcmsContent = async (req, res) => {
   const getcmsContentById = async (req, res) => {
     const { id } = req.params;
     try {
-      const [user] = await db.query('SELECT * FROM content WHERE id = ?', [id]);
+      const [user] = await db.query('SELECT * FROM content WHERE content_for = ?', [id]);
       if (user.length === 0) {
         res.status(404).json({ message: 'User not found' });
       } else {
-        res.json(user[0]);
+        res.json(user);
       }
     } catch (error) {
       res.status(500).json({ error: error.message });

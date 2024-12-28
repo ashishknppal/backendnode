@@ -2,6 +2,7 @@ const db = require('../db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const tokenBlacklist = new Set();
 // Admin login logic
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -60,10 +61,45 @@ const getAdminDetails = async (req, res) => {
       return res.status(404).json({ message: 'Admin not found' });
     }
 
-    res.json(admins[0]); // Return admin details
+    res.json(admins[0]); 
   } catch (error) {
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
-module.exports = { adminLogin ,getAdminDetails};
+
+const logout = (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(400).json({ message: 'Token not provided' });
+    }
+
+    const jwtPayload = jwt.decode(token);
+
+    if (!jwtPayload || !jwtPayload.exp) {
+      return res.status(401).json({ message: 'Invalid or malformed token' });
+    }
+
+    const isExpired = Date.now() >= jwtPayload.exp * 1000;
+    if (isExpired) {
+      return res.status(401).json({ message: 'Token already expired' });
+    }
+
+    tokenBlacklist.add(token);
+
+    setTimeout(() => tokenBlacklist.delete(token), jwtPayload.exp * 1000 - Date.now());
+
+    return res.json({ message: 'Logout successful' });
+  } catch (error) {
+    return res.status(401).json({
+      message: 'Invalid token or already expired',
+      error: error.message,
+    });
+  }
+};
+
+
+
+
+module.exports = { adminLogin ,logout,getAdminDetails};

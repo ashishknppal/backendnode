@@ -1,15 +1,17 @@
 const express = require('express');
 const { getUsers, addUser, getUserById, updateUser, deleteUser } = require('../controllers/userController');
-const { adminLogin ,getAdminDetails} = require('../controllers/adminController');
+const { adminLogin,logout ,getAdminDetails} = require('../controllers/adminController');
 const { validateUser, checkValidation } = require('../validators/userValidator');
 const { validatebod, checkValidationbod } = require('../validators/bodValidator');
 const { enquiryRegister ,feedbackRegister,getfeedback,getenquiry} = require('../controllers/enquiryController');
 const { getbod,getallbod, addBOD, getBODById, updateBOD, deleteBOD} = require('../controllers/bodController');
 const { getcms,getallcms,addcms,getCMSById,updateCMS,deleteCMS,getcmsContent,getAllcmsContent,getcmsContentById,addcmsContent,updatecmsContent,deletecmsContent } = require('../controllers/cmsController');
+const { getnews,getallnews,addnews,getnewsById,updatenews,deletenews ,getcareer,getAllcareer,getcareerById,addcareer,updatecareer,deletecareer ,getinterest,getAllinterest,getinterestById,addinterest,updateinterest,deleteinterest} = require('../controllers/careerNewsController');
 const authenticateToken = require('../middleware/auth');
 
 const router = express.Router();
 router.post('/login', adminLogin);
+router.post('/logout',authenticateToken, logout);
 router.post('/admindetails',authenticateToken, getAdminDetails);
 
 router.get('/users/', authenticateToken,getUsers);
@@ -25,8 +27,29 @@ router.get('/bod/:id', getBODById);
 router.put('/bod/:id',authenticateToken,validatebod,checkValidationbod, updateBOD);
 router.delete('/bod/:id',authenticateToken, deleteBOD);
 
-router.get('/getallcms/', getallcms);
-router.get('/getcms/', authenticateToken,getcms);
+router.get('/getallnews/', getallnews);
+router.get('/getnews/', authenticateToken,getnews);
+router.post('/news/add',authenticateToken,addnews);
+router.get('/news/:id', getnewsById);
+router.put('/news/:id',authenticateToken, updatenews);
+router.delete('/news/:id',authenticateToken, deletenews);
+
+router.get('/getAllcareer/', getAllcareer);
+router.get('/getcareer/', authenticateToken,getcareer);
+router.post('/career/add',authenticateToken,addcareer);
+router.get('/career/:id', getcareerById);
+router.put('/career/:id',authenticateToken, updatecareer);
+router.delete('/career/:id',authenticateToken, deletecareer);
+
+router.get('/getAllinterest/', getAllinterest);
+router.get('/getinterest/', authenticateToken,getinterest);
+router.post('/interest/add',authenticateToken,addinterest);
+router.get('/interest/:id', getinterestById);
+router.put('/interest/:id',authenticateToken, updateinterest);
+router.delete('/interest/:id',authenticateToken, deleteinterest);
+
+router.get('/getcms/', getcms);
+router.get('/getallcms/', authenticateToken,getallcms);
 router.post('/cms/add',authenticateToken,addcms);
 router.get('/cms/:id', getCMSById);
 router.put('/cms/:id',authenticateToken, updateCMS);
