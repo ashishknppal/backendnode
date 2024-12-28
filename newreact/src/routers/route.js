@@ -12,12 +12,17 @@ import Feedback from "../components/screens/feedback";
 import Career from "../components/screens/Career";
 import News from "../components/screens/news";
 import Interest from "../components/screens/interest";
+
+import BP from "../components/screens/bp";
+import BOD from "../components/screens/bod";
 const AppRoute = () => {
   return (
     <>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Dashboard />} />
+        <Route path="/BankProccess" element={<BP />} />
+        <Route path="/bankOfDirector" element={<BOD />} />
         <Route path="/cms" element={<CMS />} />
         <Route path="/cms-content" element={<CMScontent />} />
         <Route path="/client" element={<Client />} />

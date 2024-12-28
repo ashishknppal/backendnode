@@ -10,7 +10,19 @@ const endpoint = {
   CMS_all: `getallcms`,
   ADD_CMS: `cms/add`,
   UPDATE_CMS: `cms`,
-  DELETE_CMS: `cms`,
+  DELETE_CMS: `cms`, 
+  
+  // BOD endpoint
+  BOD: `getbod`,
+  ADD_BOD: `bod/add`,
+  UPDATE_BOD: `bod`,
+  DELETE_BOD: `bod`,
+  
+  // BP endpoint
+  BankP: `getbankprocessor`,
+  ADD_BankP: `bankproccess/add`,
+  UPDATE_BankP: `bankproccess`,
+  DELETE_BankP: `bankproccess`,
   // content endpoint
   CMScONTENT: `cmsContent/get`,
   ADD_CMScONTENT: `cmsContent/add`,

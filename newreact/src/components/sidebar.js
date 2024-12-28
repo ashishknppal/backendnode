@@ -87,6 +87,23 @@ const Sidebar = ({ isOpen }) => {
           )}
         </div>
         <Link
+          to="/bankOfDirector"
+          className={activeTab === "/bankOfDirector" ? "active" : ""}
+          onClick={() => handleSetActive("/bankOfDirector")}
+        >
+          <FaFileInvoiceDollar /> {isOpen && "Bank Of Director"}
+        </Link> 
+
+        <Link
+          to="/BankProccess"
+          className={activeTab === "/BankProccess" ? "active" : ""}
+          onClick={() => handleSetActive("/BankProccess")}
+        >
+          <FaFileInvoiceDollar /> {isOpen && "Bank's Proccess"}
+        </Link> 
+
+
+        <Link
           to="/client"
           className={activeTab === "/client" ? "active" : ""}
           onClick={() => handleSetActive("/client")}
