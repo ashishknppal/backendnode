@@ -21,6 +21,12 @@ function CMS() {
   const servicedata = [
     { id: 'form', name: 'Form' },
     { id: 'Service', name: 'Service' },
+    { id: 'AboutUS', name: 'AboutUs' },
+    { id: 'Interst', name: 'Interst' },
+    { id: 'GetInTouch', name: 'GetInTouch' },
+    { id: 'Loans', name: 'Loans' },
+    { id: 'Others', name: 'Others' },
+    
   ];
 
   useEffect(() => {
