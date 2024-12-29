@@ -75,6 +75,6 @@ router.post('/feedback',feedbackRegister);
 router.get('/getfeedback/', authenticateToken,getfeedback);
 router.get('/getenquiry/', authenticateToken,getenquiry);
 
-router.post('/uploadfile', uploadFile);
+// router.post('/uploadfile', uploadFile);
 
 module.exports = router;

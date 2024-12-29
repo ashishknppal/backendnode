@@ -1,9 +1,9 @@
 const db = require('../db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
-const path = require('path');
-const { upload } = require('./uploadConfig');
+// const fs = require('fs');
+// const path = require('path');
+// const { upload } = require('./uploadConfig');
 
 const tokenBlacklist = new Set();
 // Admin login logic
@@ -102,50 +102,51 @@ const logout = (req, res) => {
   }
 };
 
-const uploadFile = async (req, res) => {
-  try {
-    // Middleware to handle the file upload
-    const singleUpload = upload.single('file');
-    singleUpload(req, res, (err) => {
-      if (err) {
-        return res.status(400).send({ error: err.message });
-      }
+// const uploadFile = async (req, res) => {
+//   try {
+//     // Middleware to handle the file upload
+//     const singleUpload = upload.single('file');
+//     singleUpload(req, res, (err) => {
+//       if (err) {
+//         return res.status(400).send({ error: err.message });
+//       }
 
-      if (!req.file) {
-        return res.status(400).send({ error: 'No file uploaded' });
-      }
+//       if (!req.file) {
+//         return res.status(400).send({ error: 'No file uploaded' });
+//       }
 
-      // Define the target directory and file path
-      const targetDirectory = 'uploads/';
-      const targetPath = path.join(targetDirectory, req.file.filename);
+//       // Define the target directory and file path
+//       const targetDirectory = 'uploads/';
+//       const targetPath = path.join(targetDirectory, req.file.filename);
 
-      // Ensure the target directory exists
-      if (!fs.existsSync(targetDirectory)) {
-        fs.mkdirSync(targetDirectory, { recursive: true });
-      }
+//       // Ensure the target directory exists
+//       if (!fs.existsSync(targetDirectory)) {
+//         fs.mkdirSync(targetDirectory, { recursive: true });
+//       }
 
-      // Move the file from the temp directory to the target directory
-      const tempPath = req.file.path;
-      fs.rename(tempPath, targetPath, (error) => {
-        if (error) {
-          return res.status(500).send({ error: 'Error moving file' });
-        }
+//       // Move the file from the temp directory to the target directory
+//       const tempPath = req.file.path;
+//       fs.rename(tempPath, targetPath, (error) => {
+//         if (error) {
+//           return res.status(500).send({ error: 'Error moving file' });
+//         }
 
-        // Respond with file details and its new path
-        res.status(200).send({
-          message: 'File uploaded and moved successfully',
-          fileDetails: {
-            originalName: req.file.originalname,
-            storageName: req.file.filename,
-            path: targetPath,
-            size: req.file.size,
-          },
-        });
-      });
-    });
-  } catch (error) {
-    res.status(500).send({ error: 'Internal server error' });
-  }
-};
+//         // Respond with file details and its new path
+//         res.status(200).send({
+//           message: 'File uploaded and moved successfully',
+//           fileDetails: {
+//             originalName: req.file.originalname,
+//             storageName: req.file.filename,
+//             path: targetPath,
+//             size: req.file.size,
+//           },
+//         });
+//       });
+//     });
+//   } catch (error) {
+//     res.status(500).send({ error: 'Internal server error' });
+//   }
+// };
 
-module.exports = { adminLogin ,logout,getAdminDetails,uploadFile};
+// module.exports = { adminLogin ,logout,getAdminDetails,uploadFile};
+module.exports = { adminLogin ,logout,getAdminDetails};
