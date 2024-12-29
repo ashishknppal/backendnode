@@ -56,7 +56,7 @@ const getallcms = async (req, res) => {
 const addcms = async (req, res) => {
     const {
       title,
-      service,
+      getservice,
       status
     } = req.body;
   
@@ -69,7 +69,7 @@ const addcms = async (req, res) => {
          VALUES (?, ?, ?)`,
         [
           title,
-          service,
+          getservice,
           status,
           created_on
         ]
@@ -112,6 +112,7 @@ const getCMSById = async (req, res) => {
 const updateCMS = async (req, res) => {
     const {
       title,
+      getservice,
       status
     } = req.body;
   
@@ -122,10 +123,12 @@ const updateCMS = async (req, res) => {
         `UPDATE cms 
          SET 
            title = ?, 
+           service = ?, 
            status = ?
          WHERE id = ?`,
         [
           title,
+          getservice,
           status,
           id
         ]
