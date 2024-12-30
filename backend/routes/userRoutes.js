@@ -57,7 +57,7 @@ router.put('/interest/:id',authenticateToken, updateinterest);
 router.delete('/interest/:id',authenticateToken, deleteinterest);
 
 router.get('/getcms/', getcms);
-router.get('/getallcms/', authenticateToken,getallcms);
+router.get('/getallcms/', getallcms);
 router.post('/cms/add',authenticateToken,addcms);
 router.get('/cms/:id', getCMSById);
 router.put('/cms/:id',authenticateToken, updateCMS);
