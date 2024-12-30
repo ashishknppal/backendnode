@@ -66,7 +66,7 @@ const addcms = async (req, res) => {
       const [result] = await db.query(
         `INSERT INTO cms 
           (title, service, status, created_on) 
-         VALUES (?, ?, ?)`,
+         VALUES (?, ?, ?, ?)`,
         [
           title,
           getservice,
