@@ -1,5 +1,6 @@
 const db = require('../db');
-
+const multer = require("multer");
+const path = require("path");
 // Fetch all users
 const getcms = async (req, res) => {
   try {
@@ -211,17 +212,49 @@ const getcmsContent = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+  const upload = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        const uploadPath = path.join(__dirname, "../uploads");
+        cb(null, uploadPath); // Ensure this folder exists
+      },
+      filename: (req, file, cb) => {
+        const uniqueName = `${Date.now()}-${file.originalname}`;
+        cb(null, uniqueName);
+      },
+    }),
+    fileFilter: (req, file, cb) => {
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "application/pdf",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      ];
+      if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new Error("Invalid file type"));
+      }
+    },
+    limits: {
+      fileSize: 5 * 1024 * 1024, // Limit file size to 5MB
+    },
+  }).single("doc"); // Expect the file to be sent with the key "doc"
   
   
   const addcmsContent = async (req, res) => {
-      const {
-        content_for,
-        title,
-        status,
-        doc,
-        description
-      } = req.body;
-    
+    upload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+  
+      const { content_for, title, status, description } = req.body;
+      const doc = req.file ?'upload/document/'+req.file.filename : null;
+  
+      if (!content_for || !title || !status || !description) {
+        return res.status(400).json({ error: "All fields are required." });
+      }
       try {
         const created_on = new Date().toISOString().slice(0, 19).replace('T', ' '); 
     
@@ -244,6 +277,7 @@ const getcmsContent = async (req, res) => {
         console.error('Error inserting Content CMS:', error.message);
         res.status(500).json({ error: error.message });
       }
+    });
     };
 
   // Fetch a user by ID
@@ -262,13 +296,17 @@ const getcmsContent = async (req, res) => {
   };
   
   const updatecmsContent = async (req, res) => {
-    const {
-        content_for,
-        title,
-        status,
-        doc,
-        description
-      } = req.body;
+    upload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+  
+      const { content_for, title, status, description,old_doc } = req.body;
+      const doc = req.file ? 'upload/document/'+req.file.filename :old_doc;
+  
+      if (!content_for || !title || !status || !description) {
+        return res.status(400).json({ error: "All fields are required." });
+      }
     
       const { id } = req.params;
     
@@ -296,11 +334,12 @@ const getcmsContent = async (req, res) => {
           return res.status(404).json({ message: 'Content CMS not found.' });
         }
     
-        res.status(200).json({ message: 'Content CMS updated successfully.' });
+        res.status(200).json({ message: 'CMS Content updated successfully.' });
       } catch (error) {
         console.error('Error updating Content CMS:', error.message);
         res.status(500).json({ error: error.message });
       }
+    });
     };
     // Delete a BOD
   const deletecmsContent = async (req, res) => {

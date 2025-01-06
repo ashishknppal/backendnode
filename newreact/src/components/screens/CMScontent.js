@@ -17,6 +17,8 @@ function Taxcode() {
   const [description, set_description] = useState("");
   const [cms, set_cms] = useState("");
   const [getCMS, setCMS] = useState([]);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [old_uploadedFile, setold_UploadedFile] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedcontentid, setselectedcontentid] = useState(null);
   const [totalItems, setTotalItems] = useState(0);
@@ -68,10 +70,19 @@ function Taxcode() {
       content_for: cms,
       doc:""
     };
+    const formData = new FormData();
+          formData.append("title", title);
+          formData.append("status", status);
+          formData.append("description", description);
+          formData.append("content_for", cms);
+          if (uploadedFile) {
+            formData.append("doc", uploadedFile);
+          }
     try {
-      const res = await axios.post(`${endpoint.ADD_CMScONTENT}`, payload, {
+      const res = await axios.post(`${endpoint.ADD_CMScONTENT}`, formData, {
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
      
@@ -101,10 +112,20 @@ function Taxcode() {
       content_for: cms,
       doc:""
     };
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("status", status);
+    formData.append("description", description);
+    formData.append("content_for", cms);
+    formData.append("old_doc", old_uploadedFile);
+    if (uploadedFile) {
+      formData.append("doc", uploadedFile);
+    }
     try {
-      const res = await axios.put(`${endpoint.UPDATE_CMScONTENT}/${selectedcontentid}`, payload, {
+      const res = await axios.put(`${endpoint.UPDATE_CMScONTENT}/${selectedcontentid}`, formData, {
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
       console.log("update response::::", res);
@@ -168,6 +189,7 @@ function Taxcode() {
     set_status(content.status);
     cms_title(content.title);
     set_cms(content.content_for);
+    setold_UploadedFile(content.doc);
     set_description(content.description);
     handleShowModal();
   };
@@ -183,6 +205,7 @@ function Taxcode() {
       }
 
       console.log("File selected:", file);
+      setUploadedFile(file);
     }
   };
   return (
