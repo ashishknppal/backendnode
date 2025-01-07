@@ -226,7 +226,7 @@ function Taxcode() {
   return (
     <div className="container-fluid product p-3 bg-white">
       <div className="card header">
-        <h4 className="mb-3 mb-md-0">CMS Content</h4>
+        <h4 className="mb-3 mb-md-0">Bank's Proccess</h4>
         <div className="cardmenu d-flex flex-column flex-md-row">
           <div className="icons d-flex mb-2 mb-md-0">
             <a href="#" className="icon" onClick={openAddModal}>
@@ -464,7 +464,7 @@ function Taxcode() {
       </div>
     </div>
   </div>
-</div>;
+</div>
       <div className="table-responsive mt-3">
         <table className="table table-boardered">
           <thead>

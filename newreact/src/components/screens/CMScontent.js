@@ -63,13 +63,13 @@ function Taxcode() {
   // add taxcode api
   const add_cmsContent  = async () => {
     if (!validateInputs()) return;
-    const payload = {
-      title: title,
-      status: status,
-      description: description,
-      content_for: cms,
-      doc:""
-    };
+    // const payload = {
+    //   title: title,
+    //   status: status,
+    //   description: description,
+    //   content_for: cms,
+    //   doc:""
+    // };
     const formData = new FormData();
           formData.append("title", title);
           formData.append("status", status);
@@ -106,13 +106,13 @@ function Taxcode() {
   // update taxcode api
   const update_cmsContent = async () => {
     if (!validateInputs()) return;
-    const payload = {
-      title: title,
-      status: status,
-      description: description,
-      content_for: cms,
-      doc:""
-    };
+    // const payload = {
+    //   title: title,
+    //   status: status,
+    //   description: description,
+    //   content_for: cms,
+    //   doc:""
+    // };
     const formData = new FormData();
     formData.append("title", title);
     formData.append("status", status);
@@ -129,7 +129,6 @@ function Taxcode() {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("update response::::", res);
 
       toast.success(res.data.message);
       updatestate();
@@ -346,7 +345,7 @@ function Taxcode() {
       </div>
     </div>
   </div>
-</div>;
+</div>
       <div className="table-responsive mt-3">
         <table className="table table-boardered">
           <thead>

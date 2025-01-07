@@ -1,5 +1,6 @@
 const db = require('../db');
-
+const multer = require('multer');
+const path = require('path');
 // Fetch all users
 const getbod = async (req, res) => {
   try {
@@ -52,8 +53,48 @@ const getallbod = async (req, res) => {
   }
 };
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Directory where files will be saved
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}-${file.originalname}`;
+    cb(null, uniqueName);
+  },
+});
+
+const upload = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        const uploadPath = path.join(__dirname, "../upload/bod/");
+        cb(null, uploadPath); // Ensure this folder exists
+      },
+      filename: (req, file, cb) => {
+        const uniqueName = `${Date.now()}-${file.originalname}`;
+        cb(null, uniqueName);
+      },
+    }),
+    fileFilter: (req, file, cb) => {
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+      ];
+      if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new Error("Invalid file type"));
+      }
+    },
+    limits: {
+      fileSize: 5 * 1024 * 1024,
+    },
+  }).single("image");
 
 const addBOD = async (req, res) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
     const {
       name,
       degignation,
@@ -62,10 +103,11 @@ const addBOD = async (req, res) => {
       residence,
       background,
       status,
-      image
     } = req.body;
   
     try {
+
+      const image = req.file ? req.file.filename : null;
       const created_on = new Date().toISOString().slice(0, 19).replace('T', ' '); 
   
       const [result] = await db.query(
@@ -90,6 +132,7 @@ const addBOD = async (req, res) => {
       console.error('Error inserting BOD member:', error.message);
       res.status(500).json({ error: error.message });
     }
+  });
   };
 
 const getFormattedDate = () => {

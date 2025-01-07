@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../axios";
 import endpoint from "../../endpoints";
-import * as Image from "../image";
+import * as Imagedata from "../image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactPaginate from "react-paginate";
@@ -22,6 +22,7 @@ function Taxcode() {
     const [office_number, setoffice_number] = useState("");
     const [Residence_Number, setResidence_Number] = useState("");
 
+  const [old_uploadedFile, setold_UploadedFile] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedcontentid, setselectedcontentid] = useState(null);
   const [totalItems, setTotalItems] = useState(0);
@@ -53,20 +54,31 @@ function Taxcode() {
   // add taxcode api
   const add_cmsContent  = async () => {
     if (!validateInputs()) return;
-    const payload = {
-      name: name,
-      Image: Image,
-      status: status,
-      Address: Address,
-      Background: Background,
-      designation: designation,
-      office_number: office_number,
-      Residence_Number: Residence_Number,
-    };
+    // const payload = {
+    //   name: name,
+    //   Image: Image,
+    //   status: status,
+    //   Address: Address,
+    //   Background: Background,
+    //   designation: designation,
+    //   office_number: office_number,
+    //   Residence_Number: Residence_Number,
+    // };
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("Image", Image);
+    formData.append("status", status);
+    formData.append("Address", Address);
+    formData.append("Background", Background);
+    formData.append("designation", designation);
+    formData.append("office_number", office_number);
+    formData.append("Residence_Number", Residence_Number);
+
     try {
-      const res = await axios.post(`${endpoint.ADD_BOD}`, payload, {
+      const res = await axios.post(`${endpoint.ADD_BOD}`, formData, {
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
      
@@ -74,6 +86,7 @@ function Taxcode() {
       updatestate();
       get_cmsContent();
     } catch (error) {
+      toast.error(error.response.data.error);
       console.error("add content catch error:", error);
     }
   };
@@ -89,29 +102,40 @@ function Taxcode() {
   // update taxcode api
   const update_cmsContent = async () => {
     if (!validateInputs()) return;
-    const payload = {
-      name: name,
-      Image: Image,
-      status: status,
-      Address: Address,
-      Background: Background,
-      designation: designation,
-      office_number: office_number,
-      Residence_Number: Residence_Number,
-    };
+    // const payload = {
+    //   name: name,
+    //   Image: Image,
+    //   status: status,
+    //   Address: Address,
+    //   Background: Background,
+    //   designation: designation,
+    //   office_number: office_number,
+    //   Residence_Number: Residence_Number,
+    // };
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("Image", Image);
+    formData.append("status", status);
+    formData.append("Address", Address);
+    formData.append("Background", Background);
+    formData.append("designation", designation);
+    formData.append("office_number", office_number);
+    formData.append("Residence_Number", Residence_Number);
+    formData.append("old_image", old_uploadedFile);
     try {
-      const res = await axios.put(`${endpoint.UPDATE_BOD}/${selectedcontentid}`, payload, {
+      const res = await axios.put(`${endpoint.UPDATE_BOD}/${selectedcontentid}`, formData, {
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
-      console.log("update response::::", res);
 
       toast.success(res.data.message);
       updatestate();
       setselectedcontentid(null);
       get_cmsContent();
     } catch (error) {
+      toast.error(error.response.data.error);
       console.error("update content catch error:", error);
     }
   };
@@ -179,6 +203,7 @@ function Taxcode() {
     setdesignation(content.designation);
     setoffice_number(content.office);
     setResidence_Number(content.residence);
+    setold_UploadedFile(content.doc);
     handleShowModal();
   };
   const handleFileUpload = (e) => {
@@ -193,6 +218,7 @@ function Taxcode() {
       }
 
       console.log("File selected:", file);
+      setImage(file);
     }
   };
   return (
@@ -202,7 +228,7 @@ function Taxcode() {
         <div className="cardmenu d-flex flex-column flex-md-row">
           <div className="icons d-flex mb-2 mb-md-0">
             <a href="#" className="icon" onClick={openAddModal}>
-              <img src={Image.Newfile} alt="New" />
+              <img src={Imagedata.Newfile} alt="New" />
               <span>New</span>
             </a>
           </div>
@@ -245,13 +271,11 @@ function Taxcode() {
             <div className="col-md-6">
               <div className="form-group">
               <label htmlFor="Image"> Image</label>
-                <input
+              <input
                   type="file"
-                  id="Image"
-                  value={Image}
-                  onChange={(e) => setImage(e.target.value)}
-                  placeholder="Choose Image"
-                  required
+                  id="fileUpload"
+                  accept=".jpg, .jpeg, .png, .pdf, .xls, .xlsx"
+                  onChange={(e) => handleFileUpload(e)}
                 />
               </div>
             </div>
@@ -365,7 +389,7 @@ function Taxcode() {
       </div>
     </div>
   </div>
-</div>;
+</div>
       <div className="table-responsive mt-3">
         <table className="table table-boardered">
           <thead>
