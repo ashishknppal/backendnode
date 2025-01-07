@@ -90,7 +90,8 @@ function Taxcode() {
       updatestate();
       get_cmsContent();
     } catch (error) {
-      console.error("add content catch error:", error);
+      toast.error(error.response.data.error);
+      console.error("add content catch error:", error.response.data.error);
     }
   };
   const validateInputs = () => {
@@ -136,6 +137,7 @@ function Taxcode() {
       get_cmsContent();
     } catch (error) {
       console.error("update content catch error:", error);
+      toast.error(error.response.data.error);
     }
   };
 

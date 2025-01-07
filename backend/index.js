@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
@@ -9,7 +10,7 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-
+app.use('/upload', express.static(path.join(__dirname, 'upload')));
 // Link user routes
 app.use('/api', userRoutes);
 

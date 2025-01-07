@@ -215,7 +215,7 @@ const getcmsContent = async (req, res) => {
   const upload = multer({
     storage: multer.diskStorage({
       destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, "../uploads");
+        const uploadPath = path.join(__dirname, "../upload/document/");
         cb(null, uploadPath); // Ensure this folder exists
       },
       filename: (req, file, cb) => {
@@ -238,9 +238,9 @@ const getcmsContent = async (req, res) => {
       }
     },
     limits: {
-      fileSize: 5 * 1024 * 1024, // Limit file size to 5MB
+      fileSize: 5 * 1024 * 1024,
     },
-  }).single("doc"); // Expect the file to be sent with the key "doc"
+  }).single("doc");
   
   
   const addcmsContent = async (req, res) => {
@@ -252,8 +252,8 @@ const getcmsContent = async (req, res) => {
       const { content_for, title, status, description } = req.body;
       const doc = req.file ?'upload/document/'+req.file.filename : null;
   
-      if (!content_for || !title || !status || !description) {
-        return res.status(400).json({ error: "All fields are required." });
+      if (!title) {
+        return res.status(400).json({ error: "Title fields is required." });
       }
       try {
         const created_on = new Date().toISOString().slice(0, 19).replace('T', ' '); 
@@ -304,8 +304,8 @@ const getcmsContent = async (req, res) => {
       const { content_for, title, status, description,old_doc } = req.body;
       const doc = req.file ? 'upload/document/'+req.file.filename :old_doc;
   
-      if (!content_for || !title || !status || !description) {
-        return res.status(400).json({ error: "All fields are required." });
+      if (!title) {
+        return res.status(400).json({ error: "Title fields is required." });
       }
     
       const { id } = req.params;
