@@ -63,13 +63,7 @@ function Taxcode() {
   // add taxcode api
   const add_cmsContent  = async () => {
     if (!validateInputs()) return;
-    // const payload = {
-    //   title: title,
-    //   status: status,
-    //   description: description,
-    //   content_for: cms,
-    //   doc:""
-    // };
+
     const formData = new FormData();
           formData.append("title", title);
           formData.append("status", status);
@@ -106,13 +100,7 @@ function Taxcode() {
   // update taxcode api
   const update_cmsContent = async () => {
     if (!validateInputs()) return;
-    // const payload = {
-    //   title: title,
-    //   status: status,
-    //   description: description,
-    //   content_for: cms,
-    //   doc:""
-    // };
+ 
     const formData = new FormData();
     formData.append("title", title);
     formData.append("status", status);
@@ -292,7 +280,7 @@ function Taxcode() {
                   placeholder="Select Status"
                   value={status ? [status] : []}
                   onChange={(values) => {
-                    set_status(values[0]?.id || null);
+                    set_status(values[0].id);
                   }}
                   multi={false}
                 />

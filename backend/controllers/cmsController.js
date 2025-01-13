@@ -250,7 +250,7 @@ const getcmsContent = async (req, res) => {
       }
   
       const { content_for, title, status, description } = req.body;
-      const doc = req.file ?'upload/document/'+req.file.filename : null;
+      const doc = req.file ?'upload/document/'+req.file.filename : '';
   
       if (!title) {
         return res.status(400).json({ error: "Title fields is required." });

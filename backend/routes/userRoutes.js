@@ -23,9 +23,9 @@ router.delete('/users/:id',authenticateToken, deleteUser);
 
 router.get('/getbod/', authenticateToken,getbod);
 router.get('/getallbod/',getallbod);
-router.post('/bod/add',authenticateToken,validatebod, checkValidationbod,addBOD);
+router.post('/bod/add',authenticateToken, checkValidationbod,addBOD);
 router.get('/bod/:id', getBODById);
-router.put('/bod/:id',authenticateToken,validatebod,checkValidationbod, updateBOD);
+router.put('/bod/:id',authenticateToken,checkValidationbod, updateBOD);
 router.delete('/bod/:id',authenticateToken, deleteBOD);
 
 router.get('/getbankprocessor/', authenticateToken,getbankprocessor);

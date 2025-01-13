@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../axios";
-import endpoint from "../../endpoints";
+import endpoint, { ImageUrl } from "../../endpoints";
 import * as Imagedata from "../image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,6 +29,7 @@ function Taxcode() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   useEffect(() => {
+
    
     get_cmsContent(currentPage, searchTerm);
   }, [currentPage, searchTerm]);
@@ -54,16 +55,7 @@ function Taxcode() {
   // add taxcode api
   const add_cmsContent  = async () => {
     if (!validateInputs()) return;
-    // const payload = {
-    //   name: name,
-    //   Image: Image,
-    //   status: status,
-    //   Address: Address,
-    //   Background: Background,
-    //   designation: designation,
-    //   office_number: office_number,
-    //   Residence_Number: Residence_Number,
-    // };
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("Image", Image);
@@ -102,16 +94,7 @@ function Taxcode() {
   // update taxcode api
   const update_cmsContent = async () => {
     if (!validateInputs()) return;
-    // const payload = {
-    //   name: name,
-    //   Image: Image,
-    //   status: status,
-    //   Address: Address,
-    //   Background: Background,
-    //   designation: designation,
-    //   office_number: office_number,
-    //   Residence_Number: Residence_Number,
-    // };
+  
     const formData = new FormData();
     formData.append("name", name);
     formData.append("Image", Image);
@@ -125,7 +108,6 @@ function Taxcode() {
     try {
       const res = await axios.put(`${endpoint.UPDATE_BOD}/${selectedcontentid}`, formData, {
         headers: {
-          // "Content-Type": "application/json",
           "Content-Type": "multipart/form-data",
         },
       });
@@ -135,7 +117,13 @@ function Taxcode() {
       setselectedcontentid(null);
       get_cmsContent();
     } catch (error) {
-      toast.error(error.response.data.error);
+     if(error.response.data.error){
+
+       toast.error(error.response.data.error);
+     }else{
+
+       toast.error(error.response.data.errors[0].msg);
+     }
       console.error("update content catch error:", error);
     }
   };
@@ -414,7 +402,7 @@ function Taxcode() {
                   <td>{o.name}</td>
                   <td style={{ maxWidth: '200px', overflow: 'hidden' }}>
                     <img 
-                        src={o.image} 
+                       src={o.image ? `${ImageUrl}${o.image}` : `${ImageUrl}/default.png`}
                         alt="Image Preview" 
                         style={{ maxWidth: '100%', maxHeight: '100px', objectFit: 'cover' }} 
                     />

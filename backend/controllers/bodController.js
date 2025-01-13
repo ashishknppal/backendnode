@@ -88,7 +88,7 @@ const upload = multer({
     limits: {
       fileSize: 5 * 1024 * 1024,
     },
-  }).single("image");
+  }).single("Image");
 
 const addBOD = async (req, res) => {
   upload(req, res, async (err) => {
@@ -97,32 +97,32 @@ const addBOD = async (req, res) => {
     }
     const {
       name,
-      degignation,
-      address,
-      office,
-      residence,
-      background,
+      designation,
+      Address,
+      office_number,
+      Residence_Number,
+      Background,
       status,
     } = req.body;
   
     try {
 
-      const image = req.file ? req.file.filename : null;
+      const Image = req.file ? 'upload/bod/'+req.file.filename : '';
       const created_on = new Date().toISOString().slice(0, 19).replace('T', ' '); 
   
       const [result] = await db.query(
         `INSERT INTO bod 
-          (name, degignation, address, office, residence, background, status, image, created_on) 
+          (name, designation, address, office, residence, background, status, image, created_on) 
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           name,
-          degignation,
-          address,
-          office,
-          residence,
-          background,
+          designation,
+          Address,
+          office_number,
+          Residence_Number?Residence_Number:'',
+          Background?Background:'',
           status,
-          image,
+          Image?Image:'',
           created_on
         ]
       );
@@ -163,45 +163,47 @@ const getBODById = async (req, res) => {
 };
 
 const updateBOD = async (req, res) => {
+  upload(req, res, async (err) => {
+   
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
     const {
       name,
-      degignation,
-      address,
-      office,
-      residence,
-      background,
+      designation,
+      Address,
+      office_number,
+      Residence_Number,
+      Background,
       status,
-      image
     } = req.body;
-  
-    const { id } = req.params;
-  
     try {
+
+      const Image = req.file ? 'upload/bod/'+req.file.filename : null;
+      const { id } = req.params;
       const updated_on = new Date().toISOString().slice(0, 19).replace('T', ' ');
   
       const [result] = await db.query(
         `UPDATE bod 
          SET 
            name = ?, 
-           degignation = ?, 
+           designation = ?, 
            address = ?, 
            office = ?, 
            residence = ?, 
            background = ?, 
            status = ?, 
-           image = ?, 
-           updated_on = ? 
+           image = ? 
          WHERE id = ?`,
         [
           name,
-          degignation,
-          address,
-          office,
-          residence,
-          background,
+          designation,
+          Address,
+          office_number,
+          Residence_Number?Residence_Number:'',
+          Background?Background:'',
           status,
-          image,
-          updated_on,
+          Image?Image:'',
           id
         ]
       );
@@ -210,11 +212,12 @@ const updateBOD = async (req, res) => {
         return res.status(404).json({ message: 'BOD member not found.' });
       }
   
-      res.status(200).json({ message: 'BOD member updated successfully.' });
+      res.status(200).json({ message: 'BOD updated successfully.' });
     } catch (error) {
       console.error('Error updating BOD member:', error.message);
       res.status(500).json({ error: error.message });
     }
+  });
   };
   // Delete a BOD
 const deleteBOD = async (req, res) => {
