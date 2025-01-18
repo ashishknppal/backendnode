@@ -1,5 +1,39 @@
 const db = require('../db');
+const getCounts = async (req, res) => {
+  try {
+    // Single query to fetch counts from all tables
+    const [[counts]] = await db.query(`
+      SELECT
+        (SELECT COUNT(*) FROM enquiry) AS enquiryCount,
+        (SELECT COUNT(*) FROM news) AS newsCount,
+        (SELECT COUNT(*) FROM feedback) AS feedbackCount,
+        (SELECT COUNT(*) FROM account_open) AS applyForAccountCount
+    `);
 
+    // Structure the response
+    const response = {
+      success: true,
+      message: "Counts fetched successfully",
+      data: {
+        enquiry: counts.enquiryCount,
+        news: counts.newsCount,
+        feedback: counts.feedbackCount,
+        applyForAccount: counts.applyForAccountCount,
+      },
+    };
+
+    // Send the response
+    res.status(200).json(response);
+  } catch (error) {
+    // Handle errors
+    console.error("Error fetching counts:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch counts",
+      error: error.message,
+    });
+  }
+};
 // Fetch all users
 const getUsers = async (req, res) => {
   try {
@@ -184,4 +218,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, addUser, getUserById, updateUser, deleteUser };
+module.exports = {getCounts, getUsers, addUser, getUserById, updateUser, deleteUser };

@@ -4,6 +4,8 @@ const endpoint = {
   // Logout endpoint
   LOGOUT: `logout`,
   // User list
+  DASHBOARD:`dashboard`,
+  // Category endpoint
   USER_DETAILS:`admindetails`,
   // Category endpoint
   CMS: `getcms`,

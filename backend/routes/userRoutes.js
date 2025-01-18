@@ -1,5 +1,5 @@
 const express = require('express');
-const { getUsers, addUser, getUserById, updateUser, deleteUser } = require('../controllers/userController');
+const {getCounts, getUsers, addUser, getUserById, updateUser, deleteUser } = require('../controllers/userController');
 const { adminLogin,logout ,getAdminDetails ,uploadFile} = require('../controllers/adminController');
 const { validateUser, checkValidation } = require('../validators/userValidator');
 const { validatebod, checkValidationbod } = require('../validators/bodValidator');
@@ -14,6 +14,7 @@ const router = express.Router();
 router.post('/login', adminLogin);
 router.post('/logout',authenticateToken, logout);
 router.post('/admindetails',authenticateToken, getAdminDetails);
+router.get('/dashboard/', authenticateToken,getCounts);
 
 router.get('/users/', authenticateToken,getUsers);
 router.post('/users/add',validateUser, checkValidation,addUser);

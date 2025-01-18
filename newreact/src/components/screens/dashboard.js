@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "../../axios";
+import endpoint, { ImageUrl } from "../../endpoints";
 import * as Image from "../image";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 import {
@@ -26,6 +28,22 @@ ChartJS.register(
   Legend
 );
 function Dashboard() {
+  const [dashboard, set_dashboard] = useState([]);
+  
+  useEffect(() => {
+    get_cmsContent();
+  }, []);
+
+  const get_cmsContent = async (page, search = "") => {
+    try {
+      const res = await axios.get(`${endpoint.DASHBOARD}`);
+      set_dashboard(res.data.data);
+    } catch (error) {
+      console.error("users catch error:", error);
+    }
+  };
+
+
   // Sale Report
   const saledata = {
     labels: [
@@ -226,8 +244,8 @@ function Dashboard() {
               <img src={Image.TodaySale} alt="purchase" />
             </div>
             <div className="cardtext text-end">
-              <p className="mb-0">Today Sale</p>
-              <p className="mb-0">2,55,543</p>
+              <p className="mb-0">Apply for Account</p>
+              <p className="mb-0">{dashboard.applyForAccount}</p>
             </div>
           </div>
         </div>
@@ -237,8 +255,8 @@ function Dashboard() {
               <img src={Image.TodayPurchase} alt="purchase" />
             </div>
             <div className="cardtext text-end">
-              <p className="mb-0">Today Purchase</p>
-              <p className="mb-0">2,55,543</p>
+              <p className="mb-0">Enquiry</p>
+              <p className="mb-0">{dashboard.enquiry}</p>
             </div>
           </div>
         </div>
@@ -248,8 +266,8 @@ function Dashboard() {
               <img src={Image.TodayCollection} alt="purchase" />
             </div>
             <div className="cardtext text-end">
-              <p className="mb-0">Today Collection</p>
-              <p className="mb-0">2,55,543</p>
+              <p className="mb-0">Feedbacks/Suggetions</p>
+              <p className="mb-0">{dashboard.feedback}</p>
             </div>
           </div>
         </div>
@@ -259,13 +277,14 @@ function Dashboard() {
               <img src={Image.TodayPayment} alt="purchase" />
             </div>
             <div className="cardtext text-end">
-              <p className="mb-0">Today Payment</p>
-              <p className="mb-0">2,55,543</p>
+              <p className="mb-0">News & Notification</p>
+              <p className="mb-0">{dashboard.news}</p>
             </div>
           </div>
         </div>
       </div>
-      <div className="row chartdiv">
+
+      {/* <div className="row chartdiv">
         <div className="col-md-8">
           <div className=" bg-white my-2 p-4">
             <h5 className="mb-2 mx-2">Sale Report</h5>
@@ -290,7 +309,7 @@ function Dashboard() {
             <Line data={paymentdata} options={paymentoption} />
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
